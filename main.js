@@ -1,37 +1,35 @@
 class myNode
 {
-    constructor(id, data, ref)
+    constructor(id, data)
     {
         this.id = [] + id;
         this.data = data;
         this.connections = [];
         this.circle = new fabric.Circle({
             radius: r,
-            strokeWidth: 5,
             fill: 'transparent',
-            stroke: 'red',
-            selectable: false,
-            top: root.getCenterPoint().y,
-            left: root.getCenterPoint().x + (r + len + r),
+            strokeWidth: 5,
+            stroke: 'black',
+            selectable: false
         });
         this.path = new fabric.Path(`M 0 0 L ${len} 0 z`)
         this.path.set({
-            stroke: 'green',
             strokeWidth: 5,
-            selectable: false,
-            angle: 0,
-            top: root.getCenterPoint().y,
-            left: root.getCenterPoint().x + (r + len/2),
+            stroke: 'black',
+            selectable: false
         });
         this.angle = 0;
-        this.ref = ref;
+        this.text = new fabric.Text(this.id);
     }
 
     addNode(data)
     {
         var connect = this.connections;
-        var n = 10*this.id + connect.length;
-        connect.push(new myNode(n, data, this.circle));
+        var n = this.id + (connect.length + 1);
+        var newNode = new myNode(n, data);
+        connect.push(newNode);
+        this.setChildrenAngle();
+        newNode.renderNode();
     }
 
     removeNode(id)
@@ -44,60 +42,43 @@ class myNode
     }
 
     renderNode(){
-        nc.add(this.circle, this.path)
+        nc.add(this.circle, this.path, this.text)
         nc.renderAll()
     }
 
-    setAngle(angle){
-        this.angle += angle
+    setAngle(angle, ref){
+        this.angle = angle
         this.path.set({
             angle: -this.angle,
-            top: this.ref.getCenterPoint().y - Math.sin((Math.PI*this.angle)/180)*(r + len/2),
-            left: this.ref.getCenterPoint().x + Math.cos((Math.PI*this.angle)/180)*(r + len/2),
+            top: ref.getCenterPoint().y - Math.sin((Math.PI*this.angle)/180)*(r + len/2),
+            left: ref.getCenterPoint().x + Math.cos((Math.PI*this.angle)/180)*(r + len/2),
         });
+        this.path.setCoords();
         this.circle.set({
-            top: this.ref.getCenterPoint().y - Math.sin((Math.PI*this.angle)/180)*(r + len + r),
-            left: this.ref.getCenterPoint().x + Math.cos((Math.PI*this.angle)/180)*(r + len + r),
+            top: ref.getCenterPoint().y - Math.sin((Math.PI*this.angle)/180)*(r + len + r),
+            left: ref.getCenterPoint().x + Math.cos((Math.PI*this.angle)/180)*(r + len + r),
         });
+        this.circle.setCoords();
+        this.text.set({
+            top: this.circle.getCenterPoint().y,
+            left: this.circle.getCenterPoint().x
+        });
+        this.text.setCoords();
         nc.renderAll();
     }
-}
 
-var sumpa = (yo) => {
-    if(yo.connections.length != 0) {
-        let a = testezera(yo);
-        return a;
-    } else {
-        let a = `
-        <div class="teste">
-            <div>
-                ${yo.data}
-            </div>
-        </div>
-    `;
-        return a;
+    setChildrenAngle(){
+        if(this.connections==""){
+            return 0;
+        }
+        for(let i = 0; i < this.connections.length; i++){
+            this.connections[i].setAngle(i*(360/this.connections.length), this.circle)
+            this.connections[i].setChildrenAngle()
+        }
     }
 }
 
-var testezera = (inputius) => {
-    console.log(inputius.data);
-    let c = '';
-    for(i of inputius.connections){
-        c += sumpa(i);
-    }
-    console.log(c);
-    let a = `
-        <div class="teste">
-            <div>
-                ${inputius.data}
-            </div>
-            ${c}
-        </div>
-    `
-    return a;
-}
-
-let r = 20;
+let r = 30;
 let len = 50;
 
 var nc = new fabric.Canvas('canvas');
@@ -112,37 +93,34 @@ nc.setDimensions({
 fabric.Object.prototype.originX = 'center';
 fabric.Object.prototype.originY = 'center';
 
-var root = new fabric.Circle({
-    radius: r,
-    strokeWidth: 5,
-    fill: 'transparent',
-    stroke: 'red',
-    selectable: false
+var root = new myNode(0, 0);
+nc.add(root.circle, root.text);
+nc.centerObject(root.circle);
+root.circle.setCoords();
+root.text.set({
+    top: root.circle.getCenterPoint().y,
+    left: root.circle.getCenterPoint().x
 });
-nc.add(root);
-nc.centerObject(root);
-root.setCoords();
+root.text.setCoords();
 nc.renderAll();
 
-var setangle = (glurb, ref, node) => {
-    
-}
+var i = 0;
 
-var shush = new myNode(0, 0, root);
-shush.addNode(1);
-shush.addNode(2);
-shush.connections[0].addNode(1);
-// var snesh = document.getElementById("test");
-// snesh.innerHTML = testezera(shush);
-
-shush.renderNode();
-shush.connections[0].setAngle(45);
-shush.connections[1].setAngle(-45);
-shush.connections[0].renderNode();
-shush.connections[1].renderNode();
+// root.addNode(1);
+// root.addNode(2);
+// root.connections[0].addNode(1);
 
 var teste = () => {
-    shush.setAngle(10);
-    shush.connections[0].setAngle(10);
-    shush.connections[1].setAngle(10);
+    root.addNode(++i);
 }
+
+/* things that need to change:
+    dockerize
+    react
+    check renderAll (and other things) efficiency
+    check node limit
+    id generation method
+    disable group select
+    pan (zoom?)
+    buttons in canvas?
+*/
