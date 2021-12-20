@@ -20,10 +20,28 @@
         </style>    
     </head>
     <body>
-        <div id="test" class="teste">
+        <!-- <div id="test" class="teste">
 
+        </div> -->
+        <div style='display: flex; justify-content: center; align-items: center; background-color: #333; padding: 10px'>
+            <canvas id="canvas">
+                
+            </canvas>
+            <div style="
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+            ">
+                <button onclick="teste()">
+                    +
+                </button>
+                <button onclick="setangle(-10, root,shush)">
+                    -
+                </button>
+            </div>
         </div>
     </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/460/fabric.min.js" integrity="sha512-ybPp3kCrNQXdvTfh99YLIdnajWnQvHuEKDJ+b26mxI9w+pLhnBo3HmNLJ1pEUBFO1Q0bfJxApeqecNbmaV763g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="main.js"></script>
     <!-- <script>
         var teste = document.getElementById("test");
