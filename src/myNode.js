@@ -1,4 +1,9 @@
-class myNode
+import { fabric } from 'fabric'
+
+let r = 30;
+let len = 50;
+
+export class myNode
 {
     constructor(id, data)
     {
@@ -29,7 +34,6 @@ class myNode
         var newNode = new myNode(n, data);
         connect.push(newNode);
         this.setChildrenAngle();
-        newNode.renderNode();
     }
 
     removeNode(id)
@@ -39,11 +43,6 @@ class myNode
         } else {
             this.connections[id.shift()].removeNode(id);
         }
-    }
-
-    renderNode(){
-        nc.add(this.circle, this.path, this.text)
-        nc.renderAll()
     }
 
     setAngle(angle, ref){
@@ -64,7 +63,6 @@ class myNode
             left: this.circle.getCenterPoint().x
         });
         this.text.setCoords();
-        nc.renderAll();
     }
 
     setChildrenAngle(){
@@ -77,50 +75,3 @@ class myNode
         }
     }
 }
-
-let r = 30;
-let len = 50;
-
-var nc = new fabric.Canvas('canvas');
-nc.set({
-    hoverCursor: 'select',
-    backgroundColor: '#bbb'
-})
-nc.setDimensions({
-    height: 500,
-    width: 500
-});
-fabric.Object.prototype.originX = 'center';
-fabric.Object.prototype.originY = 'center';
-
-var root = new myNode(0, 0);
-nc.add(root.circle, root.text);
-nc.centerObject(root.circle);
-root.circle.setCoords();
-root.text.set({
-    top: root.circle.getCenterPoint().y,
-    left: root.circle.getCenterPoint().x
-});
-root.text.setCoords();
-nc.renderAll();
-
-var i = 0;
-
-// root.addNode(1);
-// root.addNode(2);
-// root.connections[0].addNode(1);
-
-var teste = () => {
-    root.addNode(++i);
-}
-
-/* things that need to change:
-    dockerize
-    react
-    check renderAll (and other things) efficiency
-    check node limit
-    id generation method
-    disable group select
-    pan (zoom?)
-    buttons in canvas?
-*/
