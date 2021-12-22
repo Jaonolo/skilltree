@@ -10,9 +10,13 @@ export class myNode
         this.id = [] + id;
         this.data = data;
         this.connections = [];
+        var color = this.id;
+        for(var i = 0; i + this.id.length < 6; i++){
+            color = '0' + color
+        }
         this.circle = new fabric.Circle({
             radius: r,
-            fill: 'transparent',
+            fill: '#' + color + '00',
             strokeWidth: 5,
             stroke: 'black',
             selectable: false
@@ -25,23 +29,36 @@ export class myNode
         });
         this.angle = 0;
         this.text = new fabric.Text(this.id);
+        this.text.set({
+            selectable: false
+        })
     }
 
     addNode(data)
     {
         var connect = this.connections;
-        var n = this.id + (connect.length + 1);
+        var n = (connect.length + 1) + this.id;
         var newNode = new myNode(n, data);
         connect.push(newNode);
         this.setChildrenAngle();
+
+        return(newNode)
     }
 
-    removeNode(id)
+    // removeNode(id)
+    // {
+    //     this.findNode(id)
+    // }
+
+    findNode(id)
     {
-        if(id.length==1) {
-            this.connections.splice(id[0], 1);
+        if(id.length===1) {
+            return this;
         } else {
-            this.connections[id.shift()].removeNode(id);
+            const temp = [] + id.substr(0, id.length - 1)
+            console.log(temp)
+            console.log(temp[temp.length - 1] - 1)
+            return this.connections[temp[temp.length - 1] - 1].findNode(temp);
         }
     }
 
@@ -66,11 +83,11 @@ export class myNode
     }
 
     setChildrenAngle(){
-        if(this.connections==""){
+        if(this.connections===""){
             return 0;
         }
         for(let i = 0; i < this.connections.length; i++){
-            this.connections[i].setAngle(i*(360/this.connections.length), this.circle)
+            this.connections[i].setAngle(this.angle + i*(360/this.connections.length), this.circle)
             this.connections[i].setChildrenAngle()
         }
     }

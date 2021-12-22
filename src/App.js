@@ -1,27 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
-import FabricCanvas from './canvas';
+import FabricCanvas from './FabricCanvas';
 
 function App() {
   return (
-    <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
+    <div className="App" >
       <FabricCanvas/>
     </div>
   );
 }
+
+/* things that need to change:
+    available space analyze
+    check renderAll (and other things) efficiency
+    check node limit (currently depth 6, quantity infinity? (react???))
+    disable group select
+    pan (zoom?)
+    unclickable path, that would be pretty nice
+
+    OWN MENU VS MUI MENU
+*/
 
 export default App;
