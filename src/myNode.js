@@ -56,8 +56,6 @@ export class myNode
             return this;
         } else {
             const temp = [] + id.substr(0, id.length - 1)
-            console.log(temp)
-            console.log(temp[temp.length - 1] - 1)
             return this.connections[temp[temp.length - 1] - 1].findNode(temp);
         }
     }

@@ -1,22 +1,15 @@
-import { useRef, useEffect } from 'react';
-import { myNode } from  './myNode.js'
-import { fabric } from 'fabric'
-// import ContextMenu from './ContextMenu.js'
-import './FabricCanvas.css'
+import { useRef, useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material'
-import { useState } from 'react'
+import './FabricCanvas.css'
 
-var nc = new fabric.Canvas();
 var i = 2;
 
-const teste = (testoio) => {
-    const newNode = testoio.addNode(++i);
-    nc.add(newNode.text, newNode.path, newNode.circle)
-    nc.renderAll();
-}
-
-function FabricCanvas() {
+function FabricCanvas(props) {
     const sizeRef = useRef();
+    const [state, setState] = useState({
+        style: {},
+        color: 0,
+    });
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (target) => {
@@ -24,53 +17,39 @@ function FabricCanvas() {
     };
     const handleClose = () => {
       setAnchorEl(null);
-      setPseudo({zIndex: -1, position: 'absolute', top: 0, left: 0})
-
     };
-    const [pseudoStyle, setPseudo] = useState({});
-    const [oba, setOba] = useState(null);
+    
+    const teste = (testoio) => {
+        const newNode = testoio.addNode(i);
+        props.nc.add(newNode.text, newNode.path, newNode.circle)
+        props.nc.renderAll();
+    }
+
+    props.nc.off('mouse:down');
+    props.nc.on('mouse:down', (e) => {
+        if(e.target) {
+            var tempColor = String(e.target.fill)
+            tempColor = tempColor.slice(1)
+            while((tempColor[0]==0)&&(tempColor.length > 3)){
+                tempColor = tempColor.slice(1)
+            }
+
+            tempColor = tempColor.slice(-0, -2)
+            const shush = props.root.findNode(tempColor)
+            setState({style: {zIndex: -1, position: 'absolute', top: shush.circle.getCenterPoint().y, left: shush.circle.getCenterPoint().x}, color: tempColor})
+            handleClick(
+                document.getElementById('pseudo')
+            )
+        }
+    });
 
     useEffect(() => {
-        nc.initialize('canvas')
-        nc.set({
-            hoverCursor: 'select',
-            backgroundColor: '#bbb'
-        })
-        nc.setDimensions({
+        console.log("HA!")
+        props.nc.setDimensions({
             height: sizeRef.current.clientHeight,
             width: sizeRef.current.clientWidth
         });
-        fabric.Object.prototype.originX = 'center';
-        fabric.Object.prototype.originY = 'center';
-
-        var root = new myNode(0, 0);
-        nc.add(root.text, root.circle);
-        nc.centerObject(root.circle);
-        root.circle.setCoords();
-        root.text.set({
-            top: root.circle.getCenterPoint().y,
-            left: root.circle.getCenterPoint().x
-        });
-        root.text.setCoords();
-        nc.off('mouse:down');
-        nc.on('mouse:down', (e) => {
-            if(e.target) {
-                var color = String(e.target.fill)
-                color = color.slice(1)
-                while((color[0]==0)&&(color.length > 3)){
-                    color = color.slice(1)
-                }
-                color = color.slice(-0, -2)
-                const shush = root.findNode(color)
-                console.log(shush)
-                setOba(shush)
-                setPseudo({zIndex: -1, position: 'absolute', top: shush.circle.getCenterPoint().y, left: shush.circle.getCenterPoint().x})
-                handleClick(
-                    document.getElementById('pseudo')
-                )
-            }
-        });
-        nc.renderAll();
+        props.nc.renderAll();
     });
 
     return(
@@ -82,9 +61,12 @@ function FabricCanvas() {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={() => {teste(oba)}}>teste</MenuItem>
+                <MenuItem onClick={() => {
+                    teste(props.root.findNode(state.color))
+                    handleClose();
+                }}>teste</MenuItem>
             </Menu>
-            <div id="pseudo" style={pseudoStyle}></div>
+            <div id="pseudo" style={state.style}></div>
         </div>
     );
 }
