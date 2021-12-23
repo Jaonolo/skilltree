@@ -12,7 +12,8 @@ function App() {
     nc.initialize('canvas')
         nc.set({
             hoverCursor: 'select',
-            backgroundColor: '#bbb'
+            backgroundColor: '#bbb',
+            selection: false
         })
         fabric.Object.prototype.originX = 'center';
         fabric.Object.prototype.originY = 'center';
@@ -24,7 +25,6 @@ function App() {
             top: root.circle.getCenterPoint().y,
             left: root.circle.getCenterPoint().x
         });
-        root.text.setCoords();
   })
 
   return (
@@ -35,16 +35,18 @@ function App() {
 }
 
 /* things that need to change:
-    available space analyze
-    check renderAll (and other things) efficiency
-    check node limit (currently depth 6, quantity infinity? (react???))
-    disable group select
-    pan (zoom?)
-    unclickable path, that would be pretty nice
 
-    OWN MENU VS MUI MENU
+  pan (zoom?)
+  unclickable path, that would be pretty nice
 
-    LEARN MORE ABOUT DOCKER, rewatch video??
+  color to _uid
+  available space analyze
+  check renderAll (and other things) efficiency
+
+  OWN MENU VS MUI MENU
+
+  LEARN MORE ABOUT DOCKER, rewatch video??
+
 */
 
 export default App;

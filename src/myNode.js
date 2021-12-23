@@ -1,7 +1,8 @@
 import { fabric } from 'fabric'
+import Settings from './settings.json'
 
-let r = 30;
-let len = 50;
+let r = Settings.radius;
+let len = Settings.length;
 
 export class myNode
 {
