@@ -35,18 +35,15 @@ function App() {
 }
 
 /* things that need to change:
-
-  pan (zoom?)
   unclickable path, that would be pretty nice
 
   color to _uid
   available space analyze
-  check renderAll (and other things) efficiency
 
   OWN MENU VS MUI MENU
+  (zoom?)
 
   LEARN MORE ABOUT DOCKER, rewatch video??
-
 */
 
 export default App;
