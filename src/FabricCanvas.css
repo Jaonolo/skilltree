@@ -3,3 +3,29 @@
     height: calc(100vh - 100px);
     width: calc(100% - 100px);
 }
+
+.menuContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: right;
+    padding: 10px 10px;
+    height: calc(100vh - 120px);
+    width: calc(100% - 120px);
+}
+
+.menuHolder {
+    position: absolute;
+    z-index: 1;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0px 2.5px
+}
+
+.button {
+    margin: 5px 2.5px
+}

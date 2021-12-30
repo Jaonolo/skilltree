@@ -2,9 +2,8 @@ import { useRef, useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import './FabricCanvas.css'
-
-var i = 2;
 
 function FabricCanvas(props) {
     const sizeRef = useRef();
@@ -22,7 +21,7 @@ function FabricCanvas(props) {
     });
     
     const addChild = (parent) => {
-        const newNode = parent.addNode(i);
+        const newNode = parent.addNode("data");
         props.nc.add(newNode.text, newNode.path, newNode.circle)
     }
 
@@ -32,7 +31,7 @@ function FabricCanvas(props) {
 
             var id = String(opt.target.fill)
             id = id.slice(1)
-            while((id[0]==0)&&(id.length > 3)){
+            while((id[0]==='0')&&(id.length > 3)){
                 id = id.slice(1)
             }
             id = id.slice(-0, -2)
@@ -51,7 +50,7 @@ function FabricCanvas(props) {
                 document.getElementById('pseudo')
             )
         } else {
-            console.log(this)
+            // console.log(this)
             this.isDragging = true;
             this.lastPosX = opt.e.clientX;
             this.lastPosY = opt.e.clientY;
@@ -85,6 +84,15 @@ function FabricCanvas(props) {
 
     return(
         <div className="canvasContainer" ref={sizeRef}>
+            <div className="menuContainer canvasContainer">
+                <div className="menuHolder">
+                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
+                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
+                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
+                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
+                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
+                </div>
+            </div>
             <canvas id="canvas"></canvas>
             <Menu
                 anchorEl={anchorEl}

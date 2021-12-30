@@ -37,8 +37,11 @@ function App() {
 /* things that need to change:
   unclickable path, that would be pretty nice
 
+  less page refresh?
+  reposition
   color to _uid
   available space analyze
+  store object (mongo)
 
   OWN MENU VS MUI MENU
   (zoom?)
