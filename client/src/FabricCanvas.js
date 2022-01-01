@@ -2,8 +2,9 @@ import { useRef, useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import './FabricCanvas.css'
+import { mouseUp } from './canvasFunctions';
+import { MenuContainer } from './MenuContainer';
 
 function FabricCanvas(props) {
     const sizeRef = useRef();
@@ -28,14 +29,13 @@ function FabricCanvas(props) {
     props.nc.off('mouse:down');
     props.nc.on('mouse:down', function(opt) {
         if(opt.target) {
-
             var id = String(opt.target.fill)
             id = id.slice(1)
             while((id[0]==='0')&&(id.length > 3)){
                 id = id.slice(1)
             }
             id = id.slice(-0, -2)
-
+    
             const element = props.root.findNode(id)
             setState({
                 style: {
@@ -50,7 +50,6 @@ function FabricCanvas(props) {
                 document.getElementById('pseudo')
             )
         } else {
-            // console.log(this)
             this.isDragging = true;
             this.lastPosX = opt.e.clientX;
             this.lastPosY = opt.e.clientY;
@@ -62,17 +61,22 @@ function FabricCanvas(props) {
             var vpt = this.viewportTransform;
             vpt[4] += e.clientX - this.lastPosX;
             vpt[5] += e.clientY - this.lastPosY;
-            // this.requestRenderAll();
+            if (vpt[4] < -900) {
+                vpt[4] = -900;
+            } else if (vpt[4] > 900) {
+                vpt[4] = 900;
+            }
+            if (vpt[5] < -350) {
+                vpt[5] = -350;
+            } else if (vpt[5] > 350) {
+                vpt[5] = 350;
+            }
+            this.requestRenderAll();
             this.lastPosX = e.clientX;
             this.lastPosY = e.clientY;
         }
     });
-    props.nc.on('mouse:up', function(opt) {
-        // on mouse up we want to recalculate new interaction
-        // for all objects, so we call setViewportTransform
-        this.setViewportTransform(this.viewportTransform);
-        this.isDragging = false;
-    });
+    props.nc.on('mouse:up', mouseUp);
 
     useEffect(() => {
         console.log("Re-rendering FabricCanvas component")
@@ -84,15 +88,7 @@ function FabricCanvas(props) {
 
     return(
         <div className="canvasContainer" ref={sizeRef}>
-            <div className="menuContainer canvasContainer">
-                <div className="menuHolder">
-                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
-                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
-                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
-                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
-                    <button className="button"><FontAwesomeIcon icon={faPencilAlt} style={{height: 25, width: 25}}/></button>
-                </div>
-            </div>
+            <MenuContainer root={props.root}/>
             <canvas id="canvas"></canvas>
             <Menu
                 anchorEl={anchorEl}
