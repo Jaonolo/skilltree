@@ -3,7 +3,6 @@ import { Menu, MenuItem } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import './FabricCanvas.css'
-import { mouseUp } from './canvasFunctions';
 import { MenuContainer } from './MenuContainer';
 
 function FabricCanvas(props) {
@@ -20,12 +19,12 @@ function FabricCanvas(props) {
         style: {},
         color: 0,
     });
-    
+
     const addChild = (parent) => {
         const newNode = parent.addNode("data");
         props.nc.add(newNode.text, newNode.path, newNode.circle)
     }
-
+  
     props.nc.off('mouse:down');
     props.nc.on('mouse:down', function(opt) {
         if(opt.target) {
@@ -53,6 +52,9 @@ function FabricCanvas(props) {
             this.isDragging = true;
             this.lastPosX = opt.e.clientX;
             this.lastPosY = opt.e.clientY;
+            props.nc.set({
+                defaultCursor: 'move'
+            })
         }
     });
     props.nc.on('mouse:move', function(opt) {
@@ -76,7 +78,13 @@ function FabricCanvas(props) {
             this.lastPosY = e.clientY;
         }
     });
-    props.nc.on('mouse:up', mouseUp);
+    props.nc.on('mouse:up', function () {
+        this.setViewportTransform(this.viewportTransform);
+        this.isDragging = false;
+        props.nc.set({
+            defaultCursor: 'default'
+        })
+    });
 
     useEffect(() => {
         console.log("Re-rendering FabricCanvas component")
