@@ -28,6 +28,7 @@ function App() {
   better way to store
   color to _uid
   available space analyze
+  text bug
 
   OWN MENU VS MUI MENU
 
